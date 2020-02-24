@@ -1,0 +1,6 @@
+.gradle
+build
+
+/src/main/resources/static/js
+node_modules
+*.log

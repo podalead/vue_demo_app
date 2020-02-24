@@ -1,0 +1,82 @@
+spring:
+  profiles:
+
+  # Jpa config
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        jdbc:
+          batch_size: 50
+          fetch_size: 50
+          lob:
+            non_contextual_creation: true
+        generate_statistics: true
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+
+  # Datasource config
+  datasource:
+    url: jdbc:h2:mem:test
+    username: postgres
+    password: postgres
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+logging:
+  level:
+    root: WARN
+
+server:
+  port: 9000
+
+---
+spring:
+  profiles: test
+
+  datasource:
+    url: 'jdbc:h2:mem:test'
+    username: 'postgres'
+    password: 'postgres'
+    data: 'classpath:/db/data.sql'
+
+---
+spring:
+  profiles: dev
+
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+
+  datasource:
+    url: 'jdbc:h2:mem:test'
+    username: 'postgres'
+    password: 'postgres'
+    data: 'classpath:/db/data.sql'
+
+---
+spring:
+  profiles: prod
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+
+  datasource:
+    url: 'jdbc:postgresql://192.168.1.200:5432/plato'
+    username: 'heryv1m'
+    password: 'Init123'
+    data: 'classpath:/db/data.sql'
+    driver-class-name: org.postgresql.Driver
