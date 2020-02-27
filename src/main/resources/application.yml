@@ -26,14 +26,11 @@ spring:
     url: jdbc:h2:mem:test
     username: postgres
     password: postgres
+    data: 'classpath:/db/data.sql'
 
   jackson:
     serialization:
       write-dates-as-timestamps: false
-
-logging:
-  level:
-    root: WARN
 
 server:
   port: 9000
