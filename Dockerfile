@@ -1,4 +1,4 @@
-FROM openjdk:13-jdk AS builder
+FROM openjdk:13-jdk-oracle AS builder
 COPY . .
 
 RUN apt-get update \
@@ -14,7 +14,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 
 RUN ./gradlew build
 
-FROM openjdk:13-jdk AS runner
+FROM openjdk:13-jdk-oracle AS runner
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 ARG JAR_FILE=target/*.jar
