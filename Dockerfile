@@ -1,7 +1,7 @@
-FROM openjdk:13-jdk-oracle AS builder
+FROM openjdk:11-jdk-buster AS builder
 COPY . .
 
-RUN apt-get update \
+RUN apt-get update -y \
   && apt-get install -y curl \
   && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
   && apt-get install -y nodejs \
@@ -9,14 +9,17 @@ RUN apt-get update \
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
   && echo "deb https://dl.yarnpkg.com/debian/ stable main" >> /etc/apt/sources.list.d/yarn.list \
-  && apt-get update \
-  && apt-get install yarn
+  && apt-get update -y \
+  && apt-get install -y yarn
 
 RUN ./gradlew build
 
-FROM openjdk:13-jdk-oracle AS runner
+FROM openjdk:13-jdk-alpine AS runner
 RUN addgroup -S spring && adduser -S spring -G spring
+RUN mkdir -p ./logs
+
 USER spring:spring
-ARG JAR_FILE=target/*.jar
+
+ARG JAR_FILE=build/libs/*.jar
 COPY --from=builder ${JAR_FILE} app.jar
-CMD ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

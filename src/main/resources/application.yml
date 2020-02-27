@@ -35,6 +35,9 @@ spring:
 server:
   port: 9000
 
+logging:
+  config: classpath:logback.xml
+
 ---
 spring:
   profiles: test
