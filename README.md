@@ -1,4 +1,6 @@
 # testerization
+
+![example workflow](https://github.com/podalead/vue_demo_app/actions/workflows/action.yml/badge.svg)
 ### Intro
 This is prety simple java spring boot app with Vue.js as front end. Front and back are not separated. 
 
