@@ -1,12 +1,10 @@
-import Vue from 'vue';
-import VueResource from 'vue-resource';
-import './filters';
+import {createApp} from 'vue';
+import globalFilters from './filters';
 
 import App from "./pages/App.vue";
 
-Vue.use(VueResource);
+const app = createApp(App);
 
-new Vue({
-    el: '#app',
-    render: h => h(App)
-});
+app.config.globalProperties.$filters = globalFilters;
+
+app.mount('#app');

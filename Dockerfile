@@ -1,9 +1,12 @@
-FROM gradle:6.2-jdk11 AS builder
+FROM gradle:8.3.0-jdk17-jammy AS builder
+
+MAINTAINER "poda@cloudninja.com.ua"
+
 COPY . .
 
 RUN apt-get update -y \
   && apt-get install -y curl \
-  && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+  && curl -sL https://deb.nodesource.com/setup_18.x | bash - \
   && apt-get install -y nodejs \
   && curl -L https://www.npmjs.com/install.sh | sh
 
@@ -12,21 +15,28 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
   && apt-get update -y \
   && apt-get install -y yarn
 
-RUN ./gradlew build
+RUN gradle clean build
 
 
-FROM openjdk:13-jdk-alpine AS runner
+FROM eclipse-temurin:17-jre-jammy AS runner
 
-RUN addgroup -S spring \
-    && adduser -S spring -G spring
+ARG user=spring
+ARG group=spring
+
+RUN adduser --system --group ${user}
 
 RUN mkdir -p ./logs \
-    && chown spring:spring ./logs \
+    && chown ${user}:${group} ./logs \
     && chmod 764 ./logs
+
+ENV SPRING_PROFILES_ACTIVE="dev"
+ENV H2_URL="jdbc:h2:mem:test"
 
 USER spring:spring
 
-ARG BUILDER_HOME=/home/gradle
-ARG JAR_FILE=${BUILDER_HOME}/build/libs/*.jar
-COPY --from=builder ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+USER ${user}:${group}
+
+ARG JAR_FILE="/home/gradle/build/libs/app-*.jar"
+
+COPY --from=builder ${JAR_FILE} /app.jar
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]

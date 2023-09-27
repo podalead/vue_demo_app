@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Testerization</title>
-    <script th:inline="javascript">
-        var frontendData = [[ ${frontendData} ]];
-    </script>
 </head>
 <body>
     <div id="app"></div>
-    <script th:src="${isDevMode} ? 'http://localhost:8000/main.js' : '/js/main.js'"></script>
+    <script th:src="${isDevMode} ? 'http://localhost:9000/js/main.js' : '/js/main.js'"></script>
 </body>
 </html>

@@ -1,64 +1,34 @@
 spring:
-  profiles:
-
-  # Jpa config
+  application:
+    name: "testerization"
+  flyway:
+    enabled: true
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    locations: classpath:db/migration/common,classpath:db/migration/postgresql
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: ${H2_USERNAME}
+    password: ${H2_PASSWORD}
+    url: ${H2_URL}
   jpa:
-    generate-ddl: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    open-in-view: true
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        jdbc:
-          batch_size: 50
-          fetch_size: 50
-          lob:
-            non_contextual_creation: true
-        generate_statistics: true
-        show_sql: true
         format_sql: true
-        use_sql_comments: true
-
-
-  # Datasource config
-  datasource:
-    url: jdbc:h2:mem:test
-    username: postgres
-    password: postgres
-    data: 'classpath:/db/data.sql'
-
-  jackson:
-    serialization:
-      write-dates-as-timestamps: false
+  h2:
+    console:
+      enabled: true
 
 server:
   port: 9000
 
 logging:
   config: classpath:logback.xml
-
----
-spring:
-  profiles: test
-
-  datasource:
-    url: 'jdbc:h2:mem:test'
-    username: 'postgres'
-    password: 'postgres'
-    data: 'classpath:/db/data.sql'
-
----
-spring:
-  profiles: dev
-
-  h2:
-    console:
-      path: /h2-console
-      enabled: true
-
-  datasource:
-    url: 'jdbc:h2:mem:test'
-    username: 'postgres'
-    password: 'postgres'
-    data: 'classpath:/db/data.sql'

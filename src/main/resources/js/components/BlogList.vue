@@ -1,6 +1,6 @@
 <template>
     <div>
-        <blog-item v-for="blog in blogs" :blog="blog" :key="blog.id"/>
+        <blog-item v-for="blog in this.blogs" :blog="blog" :key="blog.id"/>
     </div>
 </template>
 

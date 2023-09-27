@@ -6,13 +6,13 @@
                 <hr />
             </div>
             <div class="message">
-                {{ blog.message }}
+                {{ $filters.cutMessageLength(blog.message) }}
             </div>
             <div class="info">
                 <div class="info-element">blog: #{{ blog.id }}</div>
                 <div class="info-element">user: {{ blog.username }}</div>
-                <div class="info-element">date: {{ blog.date | dateNormalizer }}</div>
-                <div class="info-element">comments: {{ blog.comments | length }}</div>
+                <div class="info-element">date: {{ $filters.dateNormalizer(blog.date) }}</div>
+                <div class="info-element">comments: {{ $filters.length(blog.comments) }}</div>
             </div>
         </div>
     </div>
@@ -21,13 +21,15 @@
 <script>
     export default {
         name: "BlogItem",
+        setup(props) {
+        },
         props: {
             blog: {
                 id: Number,
                 username: String,
                 title: String,
                 message: String,
-                creation_date: Date,
+                createDate: Date,
                 comments: Array
             }
         }
@@ -36,7 +38,8 @@
 
 <style scoped>
     .blog {
-        padding: 0px 50px;
+        padding: 0 50px;
+        height: 175px;
         margin-bottom: 10px;
         border: cadetblue solid 2px;
     }
@@ -46,6 +49,7 @@
     }
 
     .message {
+        text-align: left;
         font-size: 18px;
         padding-bottom: 20px;
     }
